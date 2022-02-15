@@ -119,8 +119,8 @@ def solveSudoku(button):
             for i in range(9):
                 for j in range(9):
                     buttons[i][j]["anchor"] = CENTER
+                    buttons[i][j]["fg"] = "black"
                     buttons[i][j]["text"] = str(startGrid[i][j])
-                #window.after(1000, None)
             button["text"] = "SOLVED"
         else:
             return
@@ -157,7 +157,7 @@ def fill(button, i, j):
         button["text"] = number
     if button["text"] == "" and len(number) == 1 and number.isdigit():
         button["text"] = number
-    if button["text"] != "" and number == "delete":
+    if button["text"] != "" and number == "delete" and start == False:
         button["text"] = ""
     if notes == False and button["anchor"] == NE and len(number) == 1 and number.isdigit():
         button["text"] = number
