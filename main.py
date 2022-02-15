@@ -1,5 +1,4 @@
 from tkinter import *
-from constants import *
 
 startGrid = [[0 for i in range(9)] for j in range(9)]
 
@@ -49,6 +48,7 @@ def switch():
             for j in range(9):
                 if buttons[i][j]["text"] == "":
                     buttons[i][j]["anchor"] = NE
+                    buttons[i][j]["fg"] = "gray"
     else:
         notes = False
         notesButton["text"] = "Notes - OFF"
@@ -56,11 +56,25 @@ def switch():
             for j in range(9):
                 if buttons[i][j]["text"] == "":
                     buttons[i][j]["anchor"] = CENTER
+                    buttons[i][j]["fg"] = "black"
 
 nr = StringVar()
 
-intrare = Entry(window, textvariable = nr, bg = "red")
-intrare.grid(row = 3, column = 0, padx = 2, pady = 2, sticky = NSEW)
+userInput = Frame(window)
+userInput.grid(row = 3, column = 0, padx = 2, pady = 2)
+
+inputLabel = Label(userInput,
+                   font = ("Arial", 15),
+                   height = 1,
+                   width = 10,
+                   text = "Number Input")
+inputLabel.grid(row = 0, column = 0, padx = 2, pady = 2, sticky = NSEW)
+
+intrare = Entry(userInput,
+                #height = 2,
+                width = 3,
+                textvariable = nr)
+intrare.grid(row = 0, column = 1, padx = 2, pady = 2, sticky = NSEW)
 
 def is_valid(map, row, column, number):
     for i in range(9):
@@ -81,17 +95,17 @@ def is_valid(map, row, column, number):
     return True
 
 def solver(map, row, column):
-    if row == N - 1 and column == N:
+    if row == 9 - 1 and column == 9:
         return True
 
-    if column == N:
+    if column == 9:
         row += 1
         column = 0
 
     if map[row][column] > 0:
         return solver(map, row, column + 1)
 
-    for num in range(1, N + 1):
+    for num in range(1, 9 + 1):
         if is_valid(map, row, column, num):
             map[row][column] = num
             if solver(map, row, column + 1):
@@ -104,6 +118,7 @@ def solveSudoku(button):
         if solver(startGrid, 0, 0):
             for i in range(9):
                 for j in range(9):
+                    buttons[i][j]["anchor"] = CENTER
                     buttons[i][j]["text"] = str(startGrid[i][j])
                 #window.after(1000, None)
             button["text"] = "SOLVED"
@@ -133,6 +148,7 @@ def fill(button, i, j):
         if notes == False and int(number) != startGrid[i][j] and start == True:
             mistakesNumber = mistakes["text"].split(" ")
             mistakes["text"] = str(int(mistakesNumber[0]) + 1) + " mistakes"
+            intrare.delete(0, END)
             return
     if "0" in number:
         intrare.delete(0, END)
@@ -146,6 +162,7 @@ def fill(button, i, j):
     if notes == False and button["anchor"] == NE and len(number) == 1 and number.isdigit():
         button["text"] = number
         button["anchor"] = CENTER
+        button["fg"] = "black"
     intrare.delete(0, END)
 
 for i in range(9):
