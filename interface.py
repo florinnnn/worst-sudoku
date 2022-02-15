@@ -105,6 +105,7 @@ def solveSudoku(button):
             for i in range(9):
                 for j in range(9):
                     buttons[i][j]["text"] = str(startGrid[i][j])
+                #window.after(1000, None)
             button["text"] = "SOLVED"
         else:
             return
@@ -115,15 +116,24 @@ def startGame(button):
     global start, startGrid
     if start == False:
         start = True
+        mistakes.grid(row=3, column=1)
+        notesButton.grid(row=0, column=3)
+        solveButton["state"] = "normal"
         button["text"] = "Stop"
         for i in range(9):
             for j in range(9):
                 if buttons[i][j]["text"] != "":
                     startGrid[i][j] = int(buttons[i][j]["text"])
+        solver(startGrid, 0, 0)
 
 def fill(button, i, j):
     global notes
     number = nr.get()
+    if number.isdigit():
+        if notes == False and int(number) != startGrid[i][j] and start == True:
+            mistakesNumber = mistakes["text"].split(" ")
+            mistakes["text"] = str(int(mistakesNumber[0]) + 1) + " mistakes"
+            return
     if "0" in number:
         intrare.delete(0, END)
         return
@@ -206,24 +216,32 @@ for i in range(9):
                                     command = lambda i=i, j=j:fill(buttons[i][j], i, j))
         current_button.grid(row = i + 1, column = j + 1, sticky = NSEW)
         buttons[i][j] = current_button
+
+mistakes = Label(text = "0 mistakes",
+                 font = ("Arial", 15),
+                 height = 2,
+                 width = 13)
+
 notesButton = Button(text = "Notes - OFF",
                      font = ("Arial", 15),
                      height = 2,
                      width = 15,
                      command = lambda: switch())
-notesButton.grid(row = 0, column = 3)
+
 solveButton = Button(text = "Solve using BT",
+                     state = "disabled",
                      font = ("Arial", 15),
                      height = 2,
                      width = 13,
                      command = lambda: solveSudoku(solveButton))
 solveButton.grid(row = 3, column = 2)
+
 startButton = Button(text = "Start",
                      font = ("Arial", 15),
                      height = 2,
                      width = 5,
                      command = lambda:startGame(startButton))
-startButton.grid(row = 1, column = 3, pady = 10)
+startButton.grid(row = 1, column = 3, padx = 60, pady = 10)
 quit = Button(text = "close",
               font = ("Arial", 15),
               height = 1,
