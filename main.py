@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 
 startGrid = [[0 for i in range(9)] for j in range(9)]
 
@@ -127,18 +128,32 @@ def solveSudoku(button):
 
 start = False
 
+
 def startGame(button):
     global start, startGrid
     if start == False:
-        start = True
+        for i in range(9):
+            for j in range(9):
+                #print(type(i), type(j))
+                if buttons[i][j]["text"] != "":
+                    startGrid[i][j] = int(buttons[i][j]["text"])
+        # check validity
+        for i in range(9):
+            for j in range(9):
+                aux = startGrid[i][j]
+                startGrid[i][j] = 0
+                if aux == 0:
+                    continue
+                if not is_valid(startGrid, i, j, aux):
+                    messagebox.showerror("Error", "same numbers in row/column/square")
+                    buttons[i][j]["text"] = ""
+                    return
+                startGrid[i][j] = aux
         mistakes.grid(row=3, column=1)
         notesButton.grid(row=0, column=3)
         solveButton["state"] = "normal"
+        start = True
         button["text"] = "Stop"
-        for i in range(9):
-            for j in range(9):
-                if buttons[i][j]["text"] != "":
-                    startGrid[i][j] = int(buttons[i][j]["text"])
         solver(startGrid, 0, 0)
 
 def fill(button, i, j):
