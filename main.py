@@ -138,6 +138,7 @@ def startGame(button):
                 if buttons[i][j]["text"] != "":
                     startGrid[i][j] = int(buttons[i][j]["text"])
         # check validity
+        valid = True
         for i in range(9):
             for j in range(9):
                 aux = startGrid[i][j]
@@ -145,10 +146,13 @@ def startGame(button):
                 if aux == 0:
                     continue
                 if not is_valid(startGrid, i, j, aux):
-                    messagebox.showerror("Error", "same numbers in row/column/square")
+                    valid = False
                     buttons[i][j]["text"] = ""
-                    return
+                    aux = 0
                 startGrid[i][j] = aux
+        if not valid:
+            messagebox.showerror("error", "same numbers in row/column/box")
+            return
         mistakes.grid(row=3, column=1)
         notesButton.grid(row=0, column=3)
         solveButton["state"] = "normal"
@@ -168,11 +172,11 @@ def fill(button, i, j):
     if "0" in number:
         intrare.delete(0, END)
         return
-    if  button["anchor"] == NE and number.isdigit() and notes == True:
+    if  button["anchor"] == NE and number.isdigit() and len(number) <= 3 and notes == True:
         button["text"] = number
     if button["text"] == "" and len(number) == 1 and number.isdigit():
         button["text"] = number
-    if button["text"] != "" and number == "delete" and start == False:
+    if button["text"] != "" and number == "del" and (start == False or notes == True):
         button["text"] = ""
     if notes == False and button["anchor"] == NE and len(number) == 1 and number.isdigit():
         button["text"] = number
