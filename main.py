@@ -159,6 +159,7 @@ def startGame(button):
         start = True
         button["text"] = "Stop"
         solver(startGrid, 0, 0)
+        button.grid_forget()
 
 def fill(button, i, j):
     global notes
