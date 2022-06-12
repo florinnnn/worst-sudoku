@@ -1,3 +1,3 @@
 # sudoku
 
-sudoku gui
+sudoku solver 
